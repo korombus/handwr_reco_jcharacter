@@ -2,14 +2,19 @@
 import os
 import os.path
 import cv2
+import csv
 import numpy as np
 import argparse
 import platform
 from tqdm import tqdm
 
-def data_cleansing(args, dir_ref_char):
+def data_cleansing(args, label_list, dir_ref_char):
+    
     # イメージクレンジングを行う画像のフォルダ一覧を取得
     img_dir_list = os.listdir(args.directory)
+    # ラベル用の文字列
+    labels = "file_name,target\n"
+
     for image_dir in img_dir_list:
 
         # クレンジングした画像の出力先フォルダが存在しない場合は作成
@@ -33,7 +38,14 @@ def data_cleansing(args, dir_ref_char):
             img = cv2.erode(img, kernel, iterations = 1)
 
             # クレンジングした画像を保存
-            cv2.imwrite(args.output+dir_ref_char+image_dir+dir_ref_char+image, img) 
+            cv2.imwrite(args.output+dir_ref_char+image_dir+dir_ref_char+image, img)
+
+            # ラベルを作成
+            labels += image+","+label_list[image_dir]+"\n"
+    
+    # ラベルを保存
+    with open('label.csv', mode='w') as f:
+        f.write(labels)
 
 
 if __name__ == "__main__":
@@ -47,6 +59,15 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--directory", default=os.getcwd()+dir_ref_char+'character_image'+dir_ref_char+'hiragana73')
     parser.add_argument("-o", "--output", default=os.getcwd()+dir_ref_char+'character_image'+dir_ref_char+'conv_hiragana73')
+    parser.add_argument("-l", "--label", default=os.getcwd()+dir_ref_char+'hiragana_label.csv')
     args = parser.parse_args()
 
-    data_cleansing(args, dir_ref_char)
+    # ラベル作成用のデータをcsvから読み出し
+    label_list = {}
+    with open(args.label) as f:
+        label_data = f.read().split('\n')
+        for data in label_data:
+            label = data.split(',')
+            label_list[label[0]] = label[1].strip()
+
+    data_cleansing(args, label_list, dir_ref_char)
