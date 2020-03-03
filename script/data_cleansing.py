@@ -5,15 +5,16 @@ import cv2
 import csv
 import numpy as np
 import argparse
-import platform
 from tqdm import tqdm
+
+import common
 
 def data_cleansing(args, label_list, dir_ref_char):
     
     # イメージクレンジングを行う画像のフォルダ一覧を取得
     img_dir_list = os.listdir(args.directory)
     # ラベル用の文字列
-    labels = "file_name,target\n"
+    labels = "" # file_name, target\n
 
     for image_dir in img_dir_list:
 
@@ -41,7 +42,7 @@ def data_cleansing(args, label_list, dir_ref_char):
             cv2.imwrite(args.output+dir_ref_char+image_dir+dir_ref_char+image, img)
 
             # ラベルを作成
-            labels += image+","+label_list[image_dir]+"\n"
+            labels += args.output+dir_ref_char+image_dir+dir_ref_char+image+","+label_list[image_dir]+"\n"
     
     # ラベルを保存
     with open('label.csv', mode='w') as f:
@@ -50,11 +51,8 @@ def data_cleansing(args, label_list, dir_ref_char):
 
 if __name__ == "__main__":
 
-    pf = platform.system()
-    dir_ref_char = '/'
-
-    if pf == 'Windows':
-        dir_ref_char = '\\'
+    # プラットフォームに応じたディレクトリ参照の区切り文字を取得
+    dir_ref_char = common.get_directory_reference_char()
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--directory", default=os.getcwd()+dir_ref_char+'character_image'+dir_ref_char+'hiragana73')
