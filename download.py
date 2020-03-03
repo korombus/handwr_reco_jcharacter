@@ -13,7 +13,7 @@ def show_progress(block_num, block_size, total_size):
     max_symbol_num = 20
     progress_symbol_num = round(percent * max_symbol_num)
 
-    progress_bar = '@' * progress_symbol_num + '.' * (max_symbol_num - progress_symbol_num)
+    progress_bar = '\u2588' * progress_symbol_num + '.' * (max_symbol_num - progress_symbol_num)
     print('\rDOWNLOADING:'+progress_bar+'('+str(now_progress)+'%)', end='')
 
 if __name__ == "__main__":
