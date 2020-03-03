@@ -45,7 +45,7 @@ def data_cleansing(args, label_list, dir_ref_char):
             labels += args.output+dir_ref_char+image_dir+dir_ref_char+image+","+label_list[image_dir]+"\n"
     
     # ラベルを保存
-    with open('label.csv', mode='w') as f:
+    with open('label.csv', mode='w', encoding="utf-8") as f:
         f.write(labels)
 
 
@@ -62,8 +62,8 @@ if __name__ == "__main__":
 
     # ラベル作成用のデータをcsvから読み出し
     label_list = {}
-    with open(args.label) as f:
-        label_data = f.read().split('\n')
+    with open(args.label, mode='r', encoding="utf-8") as f:
+        label_data = f.read().splitlines()
         for data in label_data:
             label = data.split(',')
             label_list[label[0]] = label[1].strip()

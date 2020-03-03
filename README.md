@@ -8,7 +8,8 @@
 ```
 $ pip install -r requirements.txt
 $ python download.py
-$ python ./script/data_cleansing.py
+$ python script/data_cleansing.py
+$ python script/train.py
 ```
 
 ## Tips
