@@ -6,7 +6,7 @@
 
 ## Usage
 ```
-$ pip -r install requirements.txt
+$ pip install -r requirements.txt
 $ python download.py
 $ python ./script/data_cleansing.py
 ```
